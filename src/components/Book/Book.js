@@ -9,14 +9,15 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
 import { Button } from '@material-ui/core';
+import Bookings from '../Bookings/Bookings';
 
 const Book = () => {
     const { bedType } = useParams();
-    const [loggedInUser] = useContext(UserContext)
+    const [loggedInUser] = useContext(UserContext);
 
     const [selectedDate, setSelectedDate] = useState({
-        checkIn: new Date(),
-        checkOut: new Date(),
+        checkIn: new Date().toDateString('dd/MM/yyyy'),
+        checkOut: new Date().toDateString('dd/MM/yyyy'),
     });
 
     const handleCheckInDate = (date) => {
@@ -82,6 +83,7 @@ const Book = () => {
                     Book Now
                 </Button>
             </MuiPickersUtilsProvider>
+            <Bookings />
         </div>
     );
 };
