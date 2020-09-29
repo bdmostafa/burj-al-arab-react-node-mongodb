@@ -12,28 +12,40 @@ import { Button } from '@material-ui/core';
 
 const Book = () => {
     const { bedType } = useParams();
-    const [loggedInUser, setLoggedInUser] = useContext(UserContext)
-    // The first commit of Material-UI
+    const [loggedInUser] = useContext(UserContext)
+
     const [selectedDate, setSelectedDate] = useState({
         checkIn: new Date(),
         checkOut: new Date(),
     });
 
     const handleCheckInDate = (date) => {
-        const newDates = {...selectedDate}
+        const newDates = { ...selectedDate }
         newDates.checkIn = date;
         setSelectedDate(newDates);
     };
 
     const handleCheckOutDate = (date) => {
-        console.log(date)
-        const newDates = {...selectedDate}
+        const newDates = { ...selectedDate }
         newDates.checkOut = date;
         setSelectedDate(newDates);
     };
+
+    const handleBooking = () => {
+        const newBooking = {...loggedInUser, ...selectedDate}
+        fetch('http://localhost:5000/addBooking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(newBooking)
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+    }
+
+
     return (
         <div style={{ textAlign: 'center' }}>
-            <h1>Let's book a {bedType} Room.</h1>
+            <h1> Hello, {loggedInUser.name}! Let's book a {bedType} Room.</h1>
             <p>Want a <Link to="/home">different room?</Link> </p>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid container justify="space-around">
@@ -63,11 +75,12 @@ const Book = () => {
                     />
                 </Grid>
                 <Button
+                    onClick={handleBooking}
                     variant="contained"
                     color="primary"
                 >
                     Book Now
-      </Button>
+                </Button>
             </MuiPickersUtilsProvider>
         </div>
     );
