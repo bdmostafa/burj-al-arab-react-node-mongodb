@@ -16,8 +16,17 @@ export const handleGoogleSignIn = () => {
         .then(res => {
             const { displayName, email, photoURL } = res.user;
             const signedInUser = { name: displayName, email, photoURL }
+            storeAuthToken();
             return signedInUser;
         }).catch(err => {
             console.log(err.message)
         });
+    }
+
+    const storeAuthToken = () => {
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+            sessionStorage.setItem('token', idToken)
+          }).catch((error) => {
+            // Handle error
+          });
     }
